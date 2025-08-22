@@ -69,9 +69,14 @@ git commit -m "Comentario de actulizacion"
 git remote add origin https://github.com/tu-usuario/tu-repositorio.git
 
 ## actualizar 
-git remote set-url origin https://github.com/danacioDS/ende_generacion.git
+git remote set-url origin https://github.com/danacioDS/ende_dashboard.git
 
 
 git push -u origin main
 git status
 >>>>>>> fb8a3cf (actualizar)
+
+
+####
+pip freeze > requirements.txt
+
