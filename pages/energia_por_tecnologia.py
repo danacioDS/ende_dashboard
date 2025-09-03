@@ -278,21 +278,41 @@ with tab1:
             color='Porcentaje',
             color_continuous_scale='Oranges',
             text='Porcentaje',
-            labels={'Porcentaje': 'Participación (%)', 'TECNOLOGIA': ''}
+            labels={'Porcentaje': 'Participación (%)', 'TECNOLOGIA': ''}  
         )
         
         fig_bar.update_traces(
             texttemplate='%{x:.2f}%',
             textposition='outside',
-            marker_line=dict(color='#000', width=0.5)
+            marker_line=dict(color='#000', width=0.5),
+            textfont=dict(size=24)   # 👈 tamaño del texto en las barras
         )
         
         fig_bar.update_layout(
             height=600,
             xaxis_range=[0, participacion['Porcentaje'].max() * 1.15],
-            yaxis={'categoryorder': 'total ascending'},
-            showlegend=False
+            yaxis={
+                'categoryorder': 'total ascending',
+                'title': dict(font=dict(size=24)),
+                'tickfont': dict(size=32),   # tamaño de los nombres del eje Y
+                'automargin': True,          # ajusta márgenes automáticamente
+                'tickangle': 0,              # rotar etiquetas si es necesario, ej: 0, -45, 45
+                'tickmode': 'linear',
+                'ticksuffix': '',            # opcional, si quieres añadir algo
+                'showticklabels': True
+            },
+            xaxis={
+                'title': dict(font=dict(size=24)),
+                'tickfont': dict(size=24)
+            },
+            font=dict(size=24),
+            legend=dict(
+                title=dict(font=dict(size=32)),
+                font=dict(size=32)
+            ),
+            showlegend=True
         )
+
         
         st.plotly_chart(fig_bar, use_container_width=True)
     else:
@@ -321,12 +341,34 @@ with tab2:
             title="Comparación de Energía por Tecnología"
         )
         
-        fig_comparativo.update_layout(
-            yaxis_title="Energía (kWh)",
+
+        fig_comparativo.update_layout(  
+            yaxis_title="Energía kWh",
             xaxis_title="Fecha",
             legend_title="Tecnologías",
-            height=500
+            height=500,
+    
+        # 👇 Ajustes de fuente
+            font=dict(
+                size=14,        # tamaño general del texto
+                family="Arial", # tipo de letra
+                color="black"   # color
+            ),
+            xaxis=dict(
+                title_font=dict(size=16),  # tamaño del título del eje X
+                tickfont=dict(size=12)     # tamaño de las etiquetas del eje X
+            ),
+            yaxis=dict(
+                title_font=dict(size=16),  # tamaño del título del eje Y
+                tickfont=dict(size=12)     # tamaño de las etiquetas del eje Y
+            ),
+            legend=dict(
+                title_font=dict(size=24),  # tamaño del título de la leyenda
+                font=dict(size=20)         # tamaño de las etiquetas de la leyenda
+            )
         )
+
+        
         st.plotly_chart(fig_comparativo, use_container_width=True)
         
         # Tabla de resumen

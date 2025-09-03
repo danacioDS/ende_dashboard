@@ -321,12 +321,32 @@ with tab2:
             title="Comparación de Potencia por Tecnología"
         )
         
-        fig_comparativo.update_layout(
+        fig_comparativo.update_layout(  
             yaxis_title="Potencia (kW)",
             xaxis_title="Fecha",
             legend_title="Tecnologías",
-            height=500
+            height=500,
+    
+        # 👇 Ajustes de fuente
+            font=dict(
+                size=14,        # tamaño general del texto
+                family="Arial", # tipo de letra
+                color="black"   # color
+            ),
+            xaxis=dict(
+                title_font=dict(size=16),  # tamaño del título del eje X
+                tickfont=dict(size=12)     # tamaño de las etiquetas del eje X
+            ),
+            yaxis=dict(
+                title_font=dict(size=16),  # tamaño del título del eje Y
+                tickfont=dict(size=12)     # tamaño de las etiquetas del eje Y
+            ),
+            legend=dict(
+                title_font=dict(size=24),  # tamaño del título de la leyenda
+                font=dict(size=20)         # tamaño de las etiquetas de la leyenda
+            )
         )
+
         st.plotly_chart(fig_comparativo, use_container_width=True)
         
         # Tabla de resumen
