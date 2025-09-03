@@ -12,7 +12,7 @@ st.title("Análisis Integral de Precios de Energía")
 def load_and_transform_data():
     try:
         current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-        file_path = current_dir / "data_generacion" / "serie_precios_energia.xlsx"
+        file_path = current_dir / "data_generacion" / "serie_precios_energia_generacion.xlsx"
 
         if not file_path.exists():
             st.error("Archivo no encontrado")

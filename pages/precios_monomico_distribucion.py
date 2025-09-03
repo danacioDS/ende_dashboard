@@ -13,7 +13,7 @@ st.title("Análisis Integral de Precios Monómicos de Energía")
 def load_and_transform_data():
     try:
         current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-        file_path = current_dir / "data_distribuidor" / "precios_monomico.xlsx"
+        file_path = current_dir / "data_distribuidor" / "serie_ingresos.xlsx"
 
         if not file_path.exists():
             st.error("Archivo no encontrado")

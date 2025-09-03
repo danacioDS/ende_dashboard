@@ -14,7 +14,7 @@ def load_and_transform_data():
     try:
         # Ruta optimizada usando Path
         current_dir = Path(__file__).parent
-        file_path = current_dir.parent / "data_distribuidor" / "serie_energia.xlsx"
+        file_path = current_dir.parent / "data_distribuidor" / "serie_energia_dis.xlsx"
         
         # Validación de ruta
         if not file_path.exists():

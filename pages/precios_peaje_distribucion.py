@@ -7,7 +7,7 @@ from pathlib import Path
 
 # Configuración de la página
 st.set_page_config(page_title="Dashboard de Peaje de Generacion", layout="wide")
-st.title("Análisis Integral de Peajes de Generación")
+st.title("Análisis Integral de Peajes de Distribución")
 
 @st.cache_data
 def load_and_transform_data():
