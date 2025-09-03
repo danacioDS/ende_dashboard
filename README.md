@@ -65,7 +65,7 @@ docker run --rm -p 8501:8501 ende_distri
 
 git init
 git add .
-git commit -m "Comentario de actulizacion"
+git commit -m "Comentario de actualizacion"
 git remote add origin https://github.com/tu-usuario/tu-repositorio.git
 
 ## actualizar 
