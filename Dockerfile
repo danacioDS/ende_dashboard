@@ -1,14 +1,17 @@
-FROM python:3.10-slim
+# Dockerfile para Streamlit Dashboard
 
-# Environment variables
+# 1️⃣ Base image
+FROM python:3.11-slim
+
+# 2️⃣ Variables de entorno
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 
-# Set working directory
+# 3️⃣ Directorio de trabajo
 WORKDIR /app
 
-# Install system dependencies
+# 4️⃣ Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
@@ -16,23 +19,22 @@ RUN apt-get update && apt-get install -y \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency file first (better Docker caching)
+# 5️⃣ Copiar y actualizar pip
 COPY requirements.txt .
-
-# Upgrade pip
 RUN pip install --upgrade pip
 
-# Install Python dependencies
+# 6️⃣ Instalar dependencias de Python
 RUN pip install -r requirements.txt
 
-# Copy project files
+# 7️⃣ Copiar el resto de la aplicación
 COPY . .
 
-# Expose Streamlit default port
+# 8️⃣ Exponer el puerto de Streamlit
 EXPOSE 8501
 
-# Healthcheck (optional but professional)
+# 9️⃣ Healthcheck (opcional)
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
 
-# Default command (Streamlit dashboard)
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# 🔟 CMD para ejecutar Streamlit
+# Cambia "Bienvenidos.py" por el archivo principal de tu dashboard si cambia
+CMD ["streamlit", "run", "Bienvenidos.py", "--server.port=8501", "--server.address=0.0.0.0"]
