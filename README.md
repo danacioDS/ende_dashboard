@@ -1,30 +1,31 @@
+
+---
+
 # Ende Dashboard
 
 ## Overview
 
-Ende Dashboard is a Python-based **data ingestion, processing, and visualization pipeline** for electricity market data from the **CNDC (Comité Nacional de Despacho de Carga)**.
+**Ende Dashboard** is a Python-based **ETL pipeline and visualization tool** for electricity market data from the **CNDC (Comité Nacional de Despacho de Carga)**.
 
-The repository implements a **modular ETL architecture**:
+It features a **modular, reproducible pipeline** for:
 
-* **Ingestion** — Download CNDC raw datasets
-* **Conversion** — Normalize Excel / ZIP / CSV formats
-* **Extraction** — Parse structured datasets
-* **Processing** — Generate analytics-ready data
-* **Visualization** — Streamlit dashboard for exploration
+* **Ingestion** — Download raw CNDC datasets
+* **Conversion** — Normalize Excel, ZIP, and CSV files
+* **Extraction** — Parse structured data
+* **Processing** — Transform data for analytics
+* **Visualization** — Explore insights through a **Streamlit dashboard**
 
-This architecture supports **reproducible and automated data workflows**.
+This architecture supports **automated workflows, reproducibility, and CI/CD integration**.
 
 ---
 
-## Features
+## Key Features
 
 * Automated CNDC data ingestion
-* Modular ETL pipeline
-* Distribution and generation pipelines
-* Streamlit dashboard visualization
-* Reproducible data processing
+* Modular ETL pipeline for distribution and generation workflows
+* Interactive **Streamlit dashboard** with Plotly/Altair visualizations
 * Docker-ready environment
-* CI-friendly architecture
+* Reproducible and deterministic data processing
 
 ---
 
@@ -54,21 +55,14 @@ ende_dashboard/
 
 ## Requirements
 
-Main dependencies:
+**Python 3.12+** and the following dependencies:
 
-* pandas
-* numpy
-* requests
-* openpyxl
-* pyarrow
-* streamlit
-* plotly
-* matplotlib
-* altair
+* pandas, numpy, requests, openpyxl, pyarrow
+* streamlit, plotly, matplotlib, altair
 
-Install dependencies:
+Install with:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
@@ -76,16 +70,9 @@ pip install -r requirements.txt
 
 ## Setup
 
-Create virtual environment
-
-```
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
-```
-
-Install dependencies
-
-```
 pip install -r requirements.txt
 ```
 
@@ -93,29 +80,27 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Run Distribution Pipeline
+### Run Pipelines
 
-```
+**Distribution Pipeline:**
+
+```bash
 python dis_01_import_cndc.py
 ```
 
-### Run Generation Pipeline
+**Generation Pipeline:**
 
-```
+```bash
 python gen_01_import_cndc.py
 ```
 
----
+### Launch Dashboard
 
-## Dashboard
-
-Run Streamlit dashboard:
-
-```
+```bash
 streamlit run app.py
 ```
 
-Default URL:
+Access the dashboard at:
 
 ```
 http://localhost:8501
@@ -125,49 +110,30 @@ http://localhost:8501
 
 ## Tests
 
-Run tests:
-
-```
-pytest
+```bash
+pytest -v
 ```
 
 ---
 
 ## Docker
 
-### Build Container
+**Build Container:**
 
-```
+```bash
 docker build -t ende_dashboard .
 ```
 
-### Run Dashboard
+**Run Dashboard:**
 
-```
+```bash
 docker run --rm -p 8501:8501 ende_dashboard
 ```
 
-Open in browser:
+**Optional: Run Pipeline Scripts in Container:**
 
-```
-http://localhost:8501
-```
-
----
-
-## Docker Usage
-
-The Docker container runs the **Streamlit dashboard by default**.
-
-You can also run pipeline scripts manually:
-
-```
+```bash
 docker run -it ende_dashboard bash
-```
-
-Then run:
-
-```
 python dis_01_import_cndc.py
 ```
 
@@ -182,13 +148,9 @@ Pipeline stages:
 3. Extract structured datasets
 4. Transform and aggregate
 5. Generate analytics
-6. Visualize dashboard
+6. Visualize via Streamlit
 
-This ensures:
-
-* Deterministic processing
-* Reproducible results
-* Modular extensibility
+**Benefits:** deterministic processing, reproducible results, modular extensibility.
 
 ---
 
@@ -206,21 +168,16 @@ This ensures:
 
 Create tests:
 
-```
+```bash
 mkdir tests
-```
-
-Run tests:
-
-```
-pytest
+pytest -v
 ```
 
 ---
 
 ## Environment Reproducibility
 
-The Dockerfile ensures:
+Docker ensures:
 
 * Consistent Python environment
 * Reproducible pipeline execution
@@ -231,28 +188,25 @@ The Dockerfile ensures:
 
 ## Contributing
 
-Contributions welcome:
+Contributions welcome in areas like:
 
-* Performance improvements
+* Performance optimization
 * Pipeline reliability
 * Data validation
-* Documentation
+* Documentation improvements
 
 ---
 
 ## Notes
 
-* Requires internet connection for CNDC downloads
-* Large datasets stored locally
+* Requires internet for CNDC downloads
+* Handles large datasets locally
 * Designed for batch ETL processing
 
 ---
 
-This README is now:
+✔ Clean, professional, Docker-aligned, ETL-ready, dashboard-ready, and PR Writer-friendly
 
-✔ Clean
-✔ Professional
-✔ Docker-aligned
-✔ ETL-aligned
-✔ Dashboard-aligned
-✔ PR Writer-ready
+---
+
+If you want, I can also **add a small visual diagram of the pipeline** to make this README even more professional and easy to understand. It’ll be Streamlit + ETL flow-ready. Do you want me to do that?
