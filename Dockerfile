@@ -1,40 +1,45 @@
-# Dockerfile para Streamlit Dashboard
+# Dockerfile for Ende Dashboard - Production
+FROM python:3.11-slim AS builder
 
-# 1️⃣ Base image
-FROM python:3.11-slim
-
-# 2️⃣ Variables de entorno
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV PIP_NO_CACHE_DIR=1
-
-# 3️⃣ Directorio de trabajo
 WORKDIR /app
 
-# 4️⃣ Instalar dependencias del sistema
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    git \
-    gcc \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# 5️⃣ Copiar y actualizar pip
 COPY requirements.txt .
-RUN pip install --upgrade pip
 
-# 6️⃣ Instalar dependencias de Python
-RUN pip install -r requirements.txt
+# Install into a clean prefix
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
-# 7️⃣ Copiar el resto de la aplicación
+
+# -------------------------
+# Runtime image
+# -------------------------
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN groupadd -r appuser && useradd -r -g appuser -d /home/appuser -s /sbin/nologin appuser
+
+# Copy installed python packages
+COPY --from=builder /install /usr/local
+
 COPY . .
 
-# 8️⃣ Exponer el puerto de Streamlit
+# Create writable directories and fix ownership after COPY
+RUN mkdir -p /app/logs /tmp/.streamlit \
+    && chown -R appuser:appuser /app /tmp/.streamlit
+
+ENV PYTHONUNBUFFERED=1
+ENV HOME=/home/appuser
+ENV STREAMLIT_HOME=/tmp/.streamlit
+
 EXPOSE 8501
 
-# 9️⃣ Healthcheck (opcional)
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
+USER appuser
 
-# 🔟 CMD para ejecutar Streamlit
-# Cambia "Bienvenidos.py" por el archivo principal de tu dashboard si cambia
-CMD ["streamlit", "run", "Bienvenidos.py", "--server.port=8501", "--server.address=0.0.0.0"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl --fail http://localhost:8501/_stcore/health || exit 1
+
+CMD ["streamlit", "run", "bienvenidos.py", "--server.port=8501", "--server.address=0.0.0.0"]

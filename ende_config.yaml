@@ -1,0 +1,222 @@
+pipeline:
+  start_year: 2023
+  end_year: 2025
+
+  distribution:
+    download_prefix: c_ret_
+    download_folder: downloads_distribucion
+    data_folder: data_distribuidor
+    entity_columns: [AGENTE, EMPRESA]
+    energy_unit: MWh
+    power_unit: kW
+
+    extraction:
+      energia: {cols: [0, 1, 6], rename: [AGENTE, "Energía MWh", "Potencia kW"]}
+      ingresos: {cols: [0, 1, 3, 4, 7], rename: [AGENTE, "Energía MWh", "Ingresos Energía MWh", "Ingresos Renovables MWh", "Ingresos Potencia kW"]}
+      peaje: {cols: [0, 10, 12, 14, 16], rename: [AGENTE, "Peaje ENDE Trans. USD/MWh", "Peaje ISA USD/MWh", "Peaje ENDE USD/MWh", "Peaje TESA USD/MWh"]}
+      precios: {cols: [0, 2, 5], rename: [AGENTE, "Precio Energía USD/MWh", "Precio Potencia USD/kW"]}
+
+  generation:
+    download_prefix: c_iny_
+    download_folder: downloads_generacion
+    data_folder: data_generacion
+    entity_columns: [CENTRAL, GENERADOR, TECNOLOGIA]
+    energy_unit: kWh
+    power_unit: kW
+
+    extraction:
+      energia: {cols: [0, 1, 5], rename: [CENTRAL, "Energía kWh", "Potencia kW"]}
+      ingresos: {cols: [0, 1, 3, 4, 7], rename: [CENTRAL, "Energía KWh", "Ingresos Energía USD", "Ingresos Renovables USD", "Ingresos Potencia USD"]}
+      peaje: {cols: [0, 10, 12, 14, 16, 18], rename: [CENTRAL, "Peaje ENDE Trans. USD/MWh", "Peaje ISA USD/MWh", "Peaje ENDE USD/MWh", "Peaje TESA USD/MWh", "Peaje filiales ENDE US$/MWh"]}
+      precios: {cols: [0, 2, 6], rename: [CENTRAL, "Precio Energía USD/MWh", "Precio Potencia USD/kW"]}
+
+dashboard:
+  title: "Dashboard Energético de Bolivia"
+  icon: "⚡"
+  layout: wide
+
+  pages:
+    precio_potencia_generacion:
+      title: "Dashboard de Precios de Potencia"
+      subtitle: "Análisis Integral de Precios de Potencia - Generación"
+      file: "data_generacion/serie_precios_potencia_generacion.xlsx"
+      entity_cols: [CENTRAL, TECNOLOGIA]
+      parent_col: TECNOLOGIA
+      child_col: CENTRAL
+      value_pattern: "Precio Potencia USD/kW"
+      value_name: "Precio Potencia USD/kW"
+      unit: "USD/kW"
+      parent_label: "Generador"
+      child_label: "Agente"
+
+    precio_potencia_distribucion:
+      title: "Dashboard de Precios de Potencia"
+      subtitle: "Análisis Integral de Precios de Potencia - Distribución"
+      file: "data_distribuidor/serie_precios_dis.xlsx"
+      entity_cols: [AGENTE, EMPRESA]
+      parent_col: EMPRESA
+      child_col: AGENTE
+      value_pattern: "Precio Potencia USD/kW"
+      value_name: "Precio Potencia USD/kW"
+      unit: "USD/kW"
+      parent_label: "Empresa"
+      child_label: "Agente"
+
+    precio_energia_generacion:
+      title: "Dashboard de Precios de Energía"
+      subtitle: "Análisis Integral de Precios de Energía - Generación"
+      file: "data_generacion/serie_precios_energia_generacion.xlsx"
+      entity_cols: [CENTRAL, TECNOLOGIA]
+      parent_col: TECNOLOGIA
+      child_col: CENTRAL
+      value_pattern: "Precio Energía USD/MWh"
+      value_name: "Precio Energía USD/MWh"
+      unit: "USD/MWh"
+      parent_label: "Generador"
+      child_label: "Agente"
+
+    precio_energia_distribucion:
+      title: "Dashboard de Precios de Energía"
+      subtitle: "Análisis Integral de Precios de Energía - Distribución"
+      file: "data_distribuidor/serie_precios_dis.xlsx"
+      entity_cols: [AGENTE, EMPRESA]
+      parent_col: EMPRESA
+      child_col: AGENTE
+      value_pattern: "Precio Energía USD/MWh"
+      value_name: "Precio Energía USD/MWh"
+      unit: "USD/MWh"
+      parent_label: "Empresa"
+      child_label: "Agente"
+
+    precios_peaje_generacion:
+      title: "Dashboard de Peaje"
+      subtitle: "Análisis Integral de Peajes - Generación"
+      file: "data_generacion/serie_peaje.xlsx"
+      entity_cols: [CENTRAL, TECNOLOGIA]
+      parent_col: TECNOLOGIA
+      child_col: CENTRAL
+      value_pattern: "Peaje generación USD/MWh"
+      value_name: "Peaje generación USD/MWh"
+      unit: "USD/MWh"
+      parent_label: "Empresa"
+      child_label: "Agente"
+
+    precios_peaje_distribucion:
+      title: "Dashboard de Peaje"
+      subtitle: "Análisis Integral de Peajes - Distribución"
+      file: "data_distribuidor/serie_peaje.xlsx"
+      entity_cols: [AGENTE, EMPRESA]
+      parent_col: EMPRESA
+      child_col: AGENTE
+      value_pattern: "Peaje generación USD/MWh"
+      value_name: "Peaje generación USD/MWh"
+      unit: "USD/MWh"
+      parent_label: "Empresa"
+      child_label: "Agente"
+
+    precios_monomicos_generacion:
+      title: "Dashboard de Precios Monómicos"
+      subtitle: "Análisis Integral de Precios Monómicos - Generación"
+      file: "data_generacion/serie_ingresos_generacion.xlsx"
+      entity_cols: [CENTRAL, TECNOLOGIA]
+      parent_col: TECNOLOGIA
+      child_col: CENTRAL
+      value_pattern: "Precio Monómico USD/MWh"
+      value_name: "Precio Monómico USD/MWh"
+      unit: "USD/MWh"
+      parent_label: "Empresa"
+      child_label: "Agente"
+
+    precios_monomico_distribucion:
+      title: "Dashboard de Precios Monómicos"
+      subtitle: "Análisis Integral de Precios Monómicos - Distribución"
+      file: "data_distribuidor/serie_ingresos.xlsx"
+      entity_cols: [AGENTE, EMPRESA]
+      parent_col: EMPRESA
+      child_col: AGENTE
+      value_pattern: "Precio Monómico USD/MWh"
+      value_name: "Precio Monómico USD/MWh"
+      unit: "USD/MWh"
+      parent_label: "Empresa"
+      child_label: "Agente"
+
+    potencia_por_tecnologia:
+      title: "Dashboard de Potencia"
+      subtitle: "Análisis Integral de Potencia por Tecnología"
+      file: "data_generacion/serie_potencia_generacion.xlsx"
+      entity_cols: [CENTRAL, TECNOLOGIA]
+      parent_col: TECNOLOGIA
+      child_col: CENTRAL
+      value_pattern: "Potencia kW"
+      value_name: "Potencia kW"
+      unit: "kW"
+      parent_label: "Tecnología"
+      child_label: "Central"
+
+    potencia_por_generador:
+      title: "Dashboard de Potencia"
+      subtitle: "Análisis Integral de Potencia - Generación"
+      file: "data_generacion/serie_potencia_generacion.xlsx"
+      entity_cols: [CENTRAL, GENERADOR]
+      parent_col: GENERADOR
+      child_col: CENTRAL
+      value_pattern: "Potencia kW"
+      value_name: "Potencia kW"
+      unit: "kW"
+      parent_label: "Generador"
+      child_label: "Central"
+
+    potencia_distribuidoras:
+      title: "Dashboard de Potencia"
+      subtitle: "Análisis Integral de Potencia - Distribución"
+      file: "data_distribuidor/serie_energia_dis.xlsx"
+      entity_cols: [AGENTE, EMPRESA]
+      parent_col: EMPRESA
+      child_col: AGENTE
+      value_pattern: "Potencia kW"
+      value_name: "Potencia kW"
+      unit: "kW"
+      parent_label: "Empresa"
+      child_label: "Agente"
+
+    energia_por_tecnologia:
+      title: "Dashboard de Energía"
+      subtitle: "Análisis Integral de Energía por Tecnología"
+      file: "data_generacion/serie_energia_generacion.xlsx"
+      entity_cols: [CENTRAL, TECNOLOGIA]
+      parent_col: TECNOLOGIA
+      child_col: CENTRAL
+      value_pattern: "Energía kWh"
+      value_name: "Energía kWh"
+      unit: "kWh"
+      parent_label: "Tecnología"
+      child_label: "Central"
+
+    energia_por_generador:
+      title: "Dashboard de Energía"
+      subtitle: "Análisis Integral de Energía - Generación"
+      file: "data_generacion/serie_energia_generacion.xlsx"
+      entity_cols: [CENTRAL, GENERADOR]
+      parent_col: GENERADOR
+      child_col: CENTRAL
+      value_pattern: "Energía kWh"
+      value_name: "Energía kWh"
+      unit: "kWh"
+      parent_label: "Generador"
+      child_label: "Central"
+
+    energia_por_distribuidor:
+      title: "Dashboard de Energía"
+      subtitle: "Análisis Integral de Energía - Distribución"
+      file: "data_distribuidor/serie_energia_dis.xlsx"
+      entity_cols: [AGENTE, EMPRESA]
+      parent_col: EMPRESA
+      child_col: AGENTE
+      value_pattern: "Energía MWh"
+      value_name: "Energía MWh"
+      unit: "MWh"
+      parent_label: "Empresa"
+      child_label: "Agente"
+
+cndc:
+  base_url: "https://www.cndc.bo/media/archivos/estadistica_mensual/"

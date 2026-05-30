@@ -1,31 +1,44 @@
-
----
-
 # Ende Dashboard
 
 ## Overview
 
-**Ende Dashboard** is a Python-based **ETL pipeline and visualization tool** for electricity market data from the **CNDC (Comité Nacional de Despacho de Carga)**.
+**Ende Dashboard** is a modular **ETL pipeline and data visualization platform** built in Python for analyzing electricity market data from the **CNDC (Comité Nacional de Despacho de Carga)**.
 
-It features a **modular, reproducible pipeline** for:
+The system is designed for **reproducible data workflows**, enabling automated ingestion, transformation, and visualization of energy market datasets through an interactive **Streamlit dashboard**.
 
-* **Ingestion** — Download raw CNDC datasets
-* **Conversion** — Normalize Excel, ZIP, and CSV files
-* **Extraction** — Parse structured data
-* **Processing** — Transform data for analytics
-* **Visualization** — Explore insights through a **Streamlit dashboard**
-
-This architecture supports **automated workflows, reproducibility, and CI/CD integration**.
+It follows a **layered ETL architecture** suitable for analytics engineering, research, and production-grade data pipelines.
 
 ---
 
 ## Key Features
 
-* Automated CNDC data ingestion
-* Modular ETL pipeline for distribution and generation workflows
-* Interactive **Streamlit dashboard** with Plotly/Altair visualizations
-* Docker-ready environment
-* Reproducible and deterministic data processing
+* Automated ingestion of CNDC datasets
+* Modular ETL pipeline (ingestion → conversion → extraction → transformation)
+* Structured data processing for generation and distribution systems
+* Interactive dashboard built with **Streamlit + Plotly/Altair**
+* Reproducible workflows with deterministic outputs
+* Dockerized environment for portability and deployment
+* Scalable design for future integration (APIs, orchestration, cloud)
+
+---
+
+## Architecture
+
+The project follows a layered ETL architecture:
+
+```mermaid
+flowchart LR
+    A[CNDC Data Source] --> B[Ingestion Layer]
+    B --> C[Conversion Layer]
+    C --> D[Extraction Layer]
+    D --> E[Transformation Layer]
+    E --> F[Analytics Layer]
+    F --> G[Streamlit Dashboard]
+
+    B --> H[(Raw Data: downloads_*)]
+    D --> I[(Processed Data: data_*)]
+    E --> J[(Intermediate: preprocess/)]
+```
 
 ---
 
@@ -42,10 +55,11 @@ ende_dashboard/
 ├── gen_02_convert.py
 ├── gen_03_extract_*.py
 │
-├── downloads_*/
-├── data_*/
-├── preprocess/
+├── downloads_*/        # Raw CNDC data
+├── data_*/             # Processed datasets
+├── preprocess/         # Intermediate transformations
 │
+├── app.py              # Streamlit dashboard
 ├── requirements.txt
 ├── Dockerfile
 └── README.md
@@ -55,12 +69,13 @@ ende_dashboard/
 
 ## Requirements
 
-**Python 3.12+** and the following dependencies:
+* Python 3.12+
+* pandas, numpy, requests
+* openpyxl, pyarrow
+* streamlit
+* plotly, matplotlib, altair
 
-* pandas, numpy, requests, openpyxl, pyarrow
-* streamlit, plotly, matplotlib, altair
-
-Install with:
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -71,7 +86,7 @@ pip install -r requirements.txt
 ## Setup
 
 ```bash
-python3 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
@@ -80,19 +95,21 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Run Pipelines
+### Run ETL Pipelines
 
-**Distribution Pipeline:**
+**Distribution pipeline:**
 
 ```bash
 python dis_01_import_cndc.py
 ```
 
-**Generation Pipeline:**
+**Generation pipeline:**
 
 ```bash
 python gen_01_import_cndc.py
 ```
+
+---
 
 ### Launch Dashboard
 
@@ -100,7 +117,7 @@ python gen_01_import_cndc.py
 streamlit run app.py
 ```
 
-Access the dashboard at:
+Access locally:
 
 ```
 http://localhost:8501
@@ -108,7 +125,7 @@ http://localhost:8501
 
 ---
 
-## Tests
+## Testing
 
 ```bash
 pytest -v
@@ -116,21 +133,21 @@ pytest -v
 
 ---
 
-## Docker
+## Docker Deployment
 
-**Build Container:**
+### Build image
 
 ```bash
 docker build -t ende_dashboard .
 ```
 
-**Run Dashboard:**
+### Run dashboard
 
 ```bash
 docker run --rm -p 8501:8501 ende_dashboard
 ```
 
-**Optional: Run Pipeline Scripts in Container:**
+### Run pipeline inside container
 
 ```bash
 docker run -it ende_dashboard bash
@@ -139,74 +156,79 @@ python dis_01_import_cndc.py
 
 ---
 
-## Data Pipeline Architecture
+## Data Pipeline Design
 
-Pipeline stages:
+The pipeline is structured into deterministic stages:
 
-1. Import CNDC data
-2. Convert raw files
-3. Extract structured datasets
-4. Transform and aggregate
-5. Generate analytics
-6. Visualize via Streamlit
+1. Data ingestion from CNDC sources
+2. File conversion (Excel, ZIP, CSV normalization)
+3. Structured data extraction
+4. Data cleaning and transformation
+5. Aggregation and analytics preparation
+6. Visualization via Streamlit dashboard
 
-**Benefits:** deterministic processing, reproducible results, modular extensibility.
+This design ensures:
+
+* Reproducibility
+* Modular extensibility
+* Clear separation of concerns
+* Easy debugging and testing
 
 ---
 
-## Output Directories
+## Output Zones
 
-| Directory   | Description                  |
-| ----------- | ---------------------------- |
-| downloads_* | Raw downloaded files         |
-| data_*      | Processed datasets           |
-| preprocess  | Intermediate transformations |
+| Layer       | Description                   |
+| ----------- | ----------------------------- |
+| downloads_* | Raw ingested CNDC files       |
+| preprocess  | Intermediate transformed data |
+| data_*      | Final structured datasets     |
 
 ---
 
 ## Development
 
-Create tests:
+To extend the project:
 
 ```bash
 mkdir tests
 pytest -v
 ```
 
----
+Recommended improvements:
 
-## Environment Reproducibility
-
-Docker ensures:
-
-* Consistent Python environment
-* Reproducible pipeline execution
-* CI/CD compatibility
-* Portable dashboard deployment
-
----
-
-## Contributing
-
-Contributions welcome in areas like:
-
-* Performance optimization
-* Pipeline reliability
-* Data validation
-* Documentation improvements
+* Add schema validation
+* Improve logging and monitoring
+* Introduce pipeline orchestration (Airflow / Prefect)
+* Add CI/CD (GitHub Actions)
 
 ---
 
 ## Notes
 
-* Requires internet for CNDC downloads
-* Handles large datasets locally
-* Designed for batch ETL processing
+* Requires internet connection for CNDC data ingestion
+* Designed for batch processing workloads
+* Optimized for local + containerized execution
 
 ---
 
-✔ Clean, professional, Docker-aligned, ETL-ready, dashboard-ready, and PR Writer-friendly
+## Contributing
+
+Contributions are welcome in:
+
+* ETL optimization
+* Data quality validation
+* Dashboard UX improvements
+* Performance and scalability improvements
+* Documentation enhancements
 
 ---
 
-If you want, I can also **add a small visual diagram of the pipeline** to make this README even more professional and easy to understand. It’ll be Streamlit + ETL flow-ready. Do you want me to do that?
+## License
+
+DICD
+
+---
+
+
+

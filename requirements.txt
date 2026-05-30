@@ -51,6 +51,7 @@ psutil==7.0.0
 ptyprocess==0.7.0
 pure_eval==0.2.3
 pyarrow==21.0.0
+PyYAML==6.0.3
 pydeck==0.9.1
 pyexcel==0.7.3
 pyexcel-io==0.6.7

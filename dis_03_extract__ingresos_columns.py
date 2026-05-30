@@ -1,56 +1,46 @@
-# 03_extract__ingresos_columns.py
-"""Extracts specific columns from Excel files in the downloads folder and saves them with a new name."""
+from __future__ import annotations
 
-import os
+from pathlib import Path
+import fnmatch
+
 import pandas as pd
+from logging_config import setup_logger
 
-# Obtener la ruta absoluta de la carpeta donde se encuentra este script
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+logger = setup_logger(__name__)
 
-# Definir la carpeta "downloads" como subcarpeta de BASE_DIR
-DOWNLOAD_FOLDER = os.path.join(BASE_DIR, "downloads_distribucion")
+BASE_DIR = Path(__file__).resolve().parent
+DOWNLOAD_FOLDER = BASE_DIR / "downloads_distribucion"
 
 
-def extract_columns_and_save(folder):
-    """
-    Extrae las columnas CENTRAL, Peaje filiales ENDE US$/MWh y PROMEDIO US$/MWh
-    de cada archivo .xlsx (excluyendo archivos ya extraídos y específicos).
-    """
-        
-    excluded_files = ["serie_energia_cronologica.xlsx", "serie_temporal_larga.xlsx", "ingresos_empresas_*.xlsx", 
-                      "serie_ingresos_cronologica.xlsx", "serie_temporal_ingresos.xlsx", "ingresos_empresas_*.xlsx",
-                      "precios_empresas_*.xlsx", "energia_empresas_*.xlsx",
-                      "serie_temporal_precios.xlsx", "serie_precios_cronologica.xlsx"]
+def extract_columns_and_save(folder: str | Path) -> None:
+    excluded_patterns = [
+        "serie_*", "ingresos_empresas_*", "precios_empresas_*",
+        "energia_empresas_*",
+    ]
 
-    for file in os.listdir(folder):
-        if (file.endswith(".xlsx") and 
-            not file.startswith("extracted_") and 
-            file not in excluded_files):
-            
-            filepath = os.path.join(folder, file)
-            try:
-                # Leer el archivo Excel
-                df = pd.read_excel(filepath)
+    folder_path = Path(folder)
 
-                # Seleccionar columnas específicas por índice
-                df = df.iloc[:, [0, 1, 3, 4, 7]]
+    for file in folder_path.iterdir():
+        if not file.name.endswith(".xlsx") or file.name.startswith("extracted_"):
+            continue
+        if any(fnmatch.fnmatch(file.name, p) for p in excluded_patterns):
+            continue
 
-                # Renombrar columnas
-                df.columns = [
-                        "AGENTE",
-                        "Energía MWh",
-                        'Ingresos Energía MWh',
-                        'Ingresos Renovables MWh',
-                        'Ingresos Potencia kW'
-                    ]
-
-                # Guardar archivo con las columnas extraídas
-                output_file = os.path.join(folder, f"extracted_ingresos_{file}")
-                df.to_excel(output_file, index=False)
-                print(f"✅ Archivo {file} procesado y guardado como {output_file}.")
-            except Exception as e:
-                print(f"❌ Error al procesar {file}: {e}")
- 
+        try:
+            df = pd.read_excel(file)
+            df = df.iloc[:, [0, 1, 3, 4, 7]]
+            df.columns = [
+                "AGENTE",
+                "Energía MWh",
+                "Ingresos Energía MWh",
+                "Ingresos Renovables MWh",
+                "Ingresos Potencia kW",
+            ]
+            output_file = folder_path / f"extracted_ingresos_{file.name}"
+            df.to_excel(output_file, index=False)
+            logger.info(f"Archivo {file.name} procesado y guardado como {output_file}.")
+        except Exception as e:
+            logger.error(f"Error al procesar {file.name}: {e}")
 
 
 if __name__ == "__main__":
